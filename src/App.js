@@ -1,15 +1,20 @@
 import './App.css';
 import LineChart from './components/LineChart';
-import StockName from './components/StockNameInput';
+import StockNameInput from './components/StockNameInput';
+import { useState } from 'react';
 
 function App() {
+
+  const [stock, setStock] = useState('');
+
   return (
     <div>
-      <div>
-        <StockName/>
+      <div className="App-Component">
+        <StockNameInput onChange={setStock}/>
       </div>
+      <br></br>
       <div>
-        <LineChart/>
+        <LineChart symbol={stock}/>
       </div>
     </div>
   );

@@ -1,25 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 
-class LineChart extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      chartPriceValues: [],
-      chartDateValues: []
-    }
-  }
+function LineChart ({symbol}) {
 
-  componentDidMount() {
-    this.fetchStock();
-  }
+  const [chartPriceValues, setChartPriceValues] = useState([]);
+  const [chartDateValues, setChartDateValues] = useState([]);
 
-  fetchStock() {
-    var pointerToObject = this;
+  useEffect(() => {
+    const fetchStock = () => {
 
     var API_KEY = '3911619KY5PDLH26';
-    var Stock = 'AMZN';
-    var API_URL = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${Stock}&outputsize=compact&apikey=${API_KEY}`;
+    var API_URL = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&outputsize=compact&apikey=${API_KEY}`;
 
     var chartDateValuesCopy = [];
     var chartPriceValuesCopy = [];
@@ -32,37 +23,37 @@ class LineChart extends React.Component {
       )
       .then(
         function(data) {
-          for (var i in data['Time Series (Daily)']) {
-            chartDateValuesCopy.push(i);
-            chartPriceValuesCopy.push(data['Time Series (Daily)'][i]['1. open']);
+          for (var key in data['Time Series (Daily)']) {
+            chartDateValuesCopy.push(key);
+            chartPriceValuesCopy.push(data['Time Series (Daily)'][key]['1. open']);
           }
-          pointerToObject.setState({
-            chartDateValues: chartDateValuesCopy,
-            chartPriceValues: chartPriceValuesCopy
-          });
+          setChartDateValues(chartDateValuesCopy.reverse());
+          setChartPriceValues(chartPriceValuesCopy.reverse());
         }
       )
-    }
-  render() {
-    return (
-      <div>
-        <Line
+
+    };
+    fetchStock();
+  }, [symbol]);
+
+  return (
+
+    <div>
+      <Line
         data={{
-          labels: this.state.chartDateValues,
+          labels: chartDateValues,
           datasets:[{
             label: 'Stock Pricing',
-            data: this.state.chartPriceValues,
+            data: chartPriceValues,
             fill: false,
             borderColor: 'rgb(75, 192, 192)',
             tension: 0.1
           }],
-
         }}
         options={{ maintainAspectRatio: true }}
-        />
-      </div>
-    );
-  }
+      />
+    </div>
+  );
 }
 
 export default LineChart;

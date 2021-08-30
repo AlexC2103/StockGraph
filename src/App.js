@@ -8,7 +8,7 @@ function App() {
   const [stock, setStock] = useState('');
 
   return (
-    <div>
+    <div className="root-div">
       <div className="App-Component">
         <StockNameInput onChange={setStock}/>
       </div>

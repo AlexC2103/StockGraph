@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import LineChart from './LineChart';
+import React, { useState } from 'react';
+import './StockNameInput.css';
 
 function StockNameInput({onChange}) {
 
